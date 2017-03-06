@@ -107,7 +107,7 @@ var Router = Backbone.Router.extend({
       var remote = new Backbone.Collection
 
       // See https://developer.github.com/v3/activity/events/#list-events-that-a-user-has-received
-      remote.url = 'https://api.github.com/users/' + name + '/received_events'
+      remote.url = 'https://api.github.com/users/' + name + '/received_events' + getTokenParam()
 
       // Create an empty collection that will be used in views
       var local = new Backbone.Collection
@@ -123,7 +123,7 @@ var Router = Backbone.Router.extend({
       App.intervalId = setInterval(function () {
         console.log('fetch')
         remote.fetch()
-      }, 60 * 1000)
+      }, getTokenParam() ? 10 * 1000 : 60 * 1000)
 
       // First fetch
       remote.fetch({
@@ -180,10 +180,25 @@ var Router = Backbone.Router.extend({
 
 })
 
+function getTokenParam() {
+  if (localStorage.getItem('accessToken')) {
+    return '?access_token=' + localStorage.getItem('accessToken')
+  }
+  return ''
+}
+
 var App = {}
 
 $(function () {
   if (!("Notification" in window)) $('#alert').removeClass('hidden')
+  $('.auth-toggle').click(function (e) {
+    e.preventDefault()
+    $('.auth-form').toggle()
+  })
+  $('.auth-form').on('submit', function (e) {
+    e.preventDefault()
+    localStorage.setItem('accessToken', $('.auth-form input').val())
+  })
   var router = new Router()
   App.formView = new FormView({ el: $('#form'), router: router })
   Backbone.history.start()

@@ -1,6 +1,9 @@
 .container {
   max-width: 760px;
 }
+.navbar .container {
+  position: relative;
+}
 
 #index {
   padding-top: 0;
@@ -26,4 +29,24 @@ iframe {
 
 .avatar {
   width: 20px;
+}
+
+.auth-form {
+  position: absolute;
+  top: 0;
+  right: -17px;
+}
+
+form .auth-toggle {
+  display: inline-block;
+  margin: 0 -1em 0 1em;
+  width: 0;
+}
+
+.auth-toggle {
+  color: #777;
+}
+.auth-toggle:hover, .auth-toggle:focus {
+  color: #333;
+  text-decoration: none;
 }

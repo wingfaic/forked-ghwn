@@ -18,6 +18,16 @@
           <a class="navbar-brand" href="#" title="GitHub Web Notifier"><i class="fa fa-bell-o"></i> GHWN</a>
         </div>
         <span id="form"></span>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#" class="auth-toggle"><i class="fa fa-lock"></i> Authenticate</a></li>
+        </ul>
+        <form class="nav navbar-form navbar-right auth-form" style="display: none">
+          <div class="form-group">
+            <input type="text" id="input" class="form-control" name="name" placeholder="Access Token" autocapitalize="off">
+          </div>
+          <button type="submit" class="btn btn-default navbar-btn" style="margin: 0"><i class="fa fa-lock"></i> Authenticate</button>
+          <a href="#" class="auth-toggle"><i class="fa fa-times"></i></a>
+        </form>
       </div>
     </nav>
 
@@ -71,10 +81,9 @@
               <i class="fa fa-code"></i> with <i class="fa fa-heart-o"></i>
               by <a href="https://github.com/typicode">typicode</a>
               <span style="display: inline-block; width: 20px"></span>
-
               <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://typicode.github.io/ghwn" data-text="Get desktop notifications for #github (nothing to install)" data-via="typicode" data-dnt="true">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-              
+
               <iframe src="https://ghbtns.com/github-btn.html?user=typicode&repo=ghwn&type=star&count=false" frameborder="0" scrolling="0" width="50px" height="20px"></iframe>
             </p>
       </div>
@@ -92,7 +101,7 @@
 
     <!-- List template -->
     <script id="list-template" type="text/html">
-      <p><em>Watching... (refreshed every minute)</em></p>
+      <p><em>Watching... (refreshed every <%= getTokenParam() ? "10 seconds" : "minute" %>)</em></p>
       <hr>
       <% _.each(collection, function (model) { %>
         <div class="item">
