@@ -102,7 +102,7 @@ var eventTitle = function (event) {
   } else if (event.type == 'PushEvent') {
     return event.payload.size + ' Commit' + plur(event.payload.size) + ' Pushed to ' + event.payload.ref.replace(/^refs\/[^\/]+\//, '')
   } else if (event.type == 'IssueCommentEvent') {
-    return 'Comment ' + title(pl.action) + ' on issue #' + pl.issue.number
+    return 'Comment ' + title(pl.action) + ' on Issue #' + pl.issue.number
   } else if (event.type == 'CommitCommentEvent') {
     return 'Comment Created on commit ' + pl.comment.commit_id.slice(0, 7)
   } else if (event.type == 'ForkEvent') {
