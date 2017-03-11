@@ -78,8 +78,49 @@ var eventURL = function(event) {
     // TeamEvent*, TeamAddEvent*
     // * not in timelines
     // ** no longer created
-    //
     return 'https://github.com/'+event.repo.name
+  }
+}
+
+function plur(n, s) {
+  if (n != 1) {
+    return s || 's'
+  }
+  return ''
+}
+function title(s) {
+  // from http://stackoverflow.com/a/196991/5244995
+  return s.replace(/_/g, ' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+var eventTitle = function (event) {
+  var pl = event.payload
+  if (event.type == 'PullRequestEvent' || event.type == 'IssuesEvent') {
+    if (pl.action == 'closed' && pl.pull_request && pl.pull_request.merged) {
+      pl.action = 'merged'
+    }
+    return (pl.pull_request ? 'Pull Request' : 'Issue') + ' #' + (pl.number || pl.issue.number) + ' ' + title(pl.action)
+  } else if (event.type == 'PushEvent') {
+    return event.payload.size + ' Commit' + plur(event.payload.size) + ' Pushed to ' + event.payload.ref.replace(/^refs\/[^\/]+\//, '')
+  } else if (event.type == 'IssueCommentEvent') {
+    return 'Issue Comment ' + title(pl.action) + ' on issue #' + pl.issue.number
+  } else if (event.type == 'CommitCommentEvent') {
+    return 'Issue Comment ' + title(pl.action) + ' on commit ' + pl.comment.commit_id.slice(0, 7)
+  } else if (event.type == 'ForkEvent') {
+    return 'Forked!'
+  } else if (event.type == 'FollowEvent') {
+    return 'User followed'
+  } else if (event.type == 'GollumEvent') {
+    return 'Wiki Page “' + pl.pages[0].title + '” ' + title(pl.pages[0].action)
+  } else if (event.type == 'PublicEvent') {
+    return 'Repo open-sourced :)'
+  } else if (event.type == 'PullRequestReviewEvent') {
+    return 'Pull Request #' + pl.pull_request.number + ' Reviewed: ' + title(pl.review.state)
+  } else if (event.type == 'PullRequestReviewCommentEvent') {
+    return 'Pull Request #' + pl.pull_request.number + ' Comment  ' + title(pl.action)
+  } else if (event.type == 'PullRequestReviewCommentEvent') {
+    return 'Release ' + (pl.release.name || pl.release.tag_name) + ' ' + title(pl.action) + (pl.release.draft ? ' [Draft]' : '')
+  } else {
+    return event.type.replace(/([a-z])([A-Z])/g, '$1 $2')
   }
 }
 
@@ -92,7 +133,7 @@ var NotificationView = Backbone.View.extend({
   notify: function (model) {
     if (App.initialLoad) { return }
     var attr = model.attributes
-    var title = attr.type
+    var title = eventTitle(attr)
     var body = [
       'on', attr.repo.name,
       'by', attr.actor.login,
