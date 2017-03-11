@@ -65,6 +65,7 @@ var NotificationView = Backbone.View.extend({
   },
 
   notify: function (model) {
+    if (App.initialLoad) { return }
     var attr = model.attributes
     var title = attr.type
     var body = [
@@ -128,12 +129,17 @@ var Router = Backbone.Router.extend({
       // First fetch
       remote.fetch({
         success: function () {
-          // Add first remote item to the local collection
-          local.unshift(remote.first())
+          App.initialLoad = true
+          remote.forEach(function (model) {
+            local.push(model)
+          })
 
           // Add new remote item to the local collection
           remote.on('add', function (model) {
             local.unshift(model)
+          })
+          setTimeout(function () {
+            App.initialLoad = false
           })
         },
         error: function (collection, response) {
