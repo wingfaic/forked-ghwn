@@ -56,3 +56,8 @@ form .auth-toggle {
   color: #333;
   text-decoration: none;
 }
+
+.footer p {
+  display: flex;
+  align-items: center;
+}
