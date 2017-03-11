@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -109,10 +110,10 @@
             <strong><a href="<%= eventURL(model) %>" target="_blank"><%= model.type %></a></strong>
             on <a href="https://github.com/<%= model.repo.name %>" target="_blank"><%= model.repo.name %></a>
             by <a href="https://github.com/<%= model.actor.login %>" target="_blank"><img src="<%= model.actor.avatar_url %>" class="avatar" /> <%= model.actor.login %></a>
-            at <%= new Date(model.created_at).toLocaleTimeString() %>
+            <span data-livestamp="<%= model.created_at %>">at <%= new Date(model.created_at).toLocaleTimeString() %></span>
           </p>
         </div>
-      <% }); %>
+      <% }); %>
     </script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -120,6 +121,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.0/backbone-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/tinycon/0.5/tinycon.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/ifvisible/1.0.3/ifvisible.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/livestamp/1.1.2/livestamp.min.js"></script>
     <script src="script.js"></script>
 
     <script>
