@@ -98,7 +98,7 @@ var NotificationView = Backbone.View.extend({
       'by', attr.actor.login,
       'at', new Date(attr.created_at).toLocaleTimeString()
     ].join(' ')
-    var icon = attr.actor.avatar_url
+    var icon = localStorage.hideAvatar ? 'favicon.png' : attr.actor.avatar_url
     var notification = new Notification(title, { body: body, icon: icon })
     var url = eventURL(attr)
     notification.onclick = function(event) {
