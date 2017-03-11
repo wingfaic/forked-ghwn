@@ -102,9 +102,9 @@ var eventTitle = function (event) {
   } else if (event.type == 'PushEvent') {
     return event.payload.size + ' Commit' + plur(event.payload.size) + ' Pushed to ' + event.payload.ref.replace(/^refs\/[^\/]+\//, '')
   } else if (event.type == 'IssueCommentEvent') {
-    return 'Issue Comment ' + title(pl.action) + ' on issue #' + pl.issue.number
+    return 'Comment ' + title(pl.action) + ' on issue #' + pl.issue.number
   } else if (event.type == 'CommitCommentEvent') {
-    return 'Issue Comment ' + title(pl.action) + ' on commit ' + pl.comment.commit_id.slice(0, 7)
+    return 'Comment Created on commit ' + pl.comment.commit_id.slice(0, 7)
   } else if (event.type == 'ForkEvent') {
     return 'Fork Created by ' + pl.forkee.owner.login
   } else if (event.type == 'FollowEvent') {
