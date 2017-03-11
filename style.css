@@ -9,13 +9,19 @@
   padding-top: 0;
 }
 
-.item:last-child {
-  border-bottom: none;
+#list {
+  padding: 0 30px 15px;
 }
 
+.item:last-child {
+  border-bottom: 1px solid #eee;
+}
 .item {
-  border-bottom: 1px solid #F5F5F5;
-  margin-bottom: 10px;
+  border-top: 1px solid #eee;
+  padding: 10px 0;
+}
+.item p {
+  margin: 0;
 }
 
 /* Social buttons */

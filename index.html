@@ -103,7 +103,6 @@
     <!-- List template -->
     <script id="list-template" type="text/html">
       <p><em>Watching... (refreshed every <%= getTokenParam() ? "10 seconds" : "minute" %>)</em></p>
-      <hr>
       <% _.each(collection, function (model) { %>
         <div class="item">
           <p>
