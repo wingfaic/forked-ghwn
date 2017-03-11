@@ -43,17 +43,42 @@ var ListView = Backbone.View.extend({
 })
 
 var eventURL = function(event) {
+  function url(key) {
+    return event.payload[key].html_url
+  }
   if (event.type == 'PullRequestEvent') {
-    return event.payload.pull_request.html_url
+    return url('pull_request')
   } else if (event.type == 'PushEvent') {
     return 'https://github.com/'+event.repo.name+'/compare/'+event.payload.before+'...'+event.payload.head
   } else if (event.type == 'IssuesEvent') {
-    return event.payload.issue.html_url
-  } else if (event.type == 'IssueCommentEvent') {
-    return event.payload.comment.html_url
+    return url('issue')
+  } else if (event.type == 'IssueCommentEvent' || event.type == 'CommitCommentEvent') {
+    return url('comment')
   } else if (event.type == 'ForkEvent') {
-    return event.payload.forkee.html_url
+    return url('forkee')
+  } else if (event.type == 'FollowEvent') { // **
+    return url('target')
+  } else if (event.type == 'GollumEvent') { // wiki update
+    return event.payload.pages[0].html_url + '/_compare/' + event.payload.pages[0].sha
+  } else if (event.type == 'PublicEvent') {
+    return 'https://github.com/'+event.payload.repository.full_name
+  } else if (event.type == 'PullRequestReviewEvent') {
+    return url('review')
+  } else if (event.type == 'PullRequestReviewCommentEvent') {
+    return url('comment')
+  } else if (event.type == 'ReleaseEvent') {
+    return url('release')
   } else {
+    // CreateEvent, DeleteEvent, MemberEvent, OrgBlockEvent,
+    // ProjectCardEvent, ProjectColumnEvent, ProjectEvent, WatchEvent,
+    // DownloadEvent**, ForkApplyEvent**, GistEvent**,
+    // MembershipEvent*, MilestoneEvent*, LabelEvent*,
+    // OrganizationEvent*, DeploymentEvent*, DeploymentStatusEvent*,
+    // PageBuildEvent*, RepositoryEvent*, StatusEvent*,
+    // TeamEvent*, TeamAddEvent*
+    // * not in timelines
+    // ** no longer created
+    //
     return 'https://github.com/'+event.repo.name
   }
 }
