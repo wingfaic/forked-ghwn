@@ -106,7 +106,7 @@ var eventTitle = function (event) {
   } else if (event.type == 'CommitCommentEvent') {
     return 'Issue Comment ' + title(pl.action) + ' on commit ' + pl.comment.commit_id.slice(0, 7)
   } else if (event.type == 'ForkEvent') {
-    return 'Forked!'
+    return 'Fork Created by ' + pl.forkee.owner.login
   } else if (event.type == 'FollowEvent') {
     return 'User followed'
   } else if (event.type == 'GollumEvent') {
@@ -119,7 +119,22 @@ var eventTitle = function (event) {
     return 'Pull Request #' + pl.pull_request.number + ' Comment  ' + title(pl.action)
   } else if (event.type == 'PullRequestReviewCommentEvent') {
     return 'Release ' + (pl.release.name || pl.release.tag_name) + ' ' + title(pl.action) + (pl.release.draft ? ' [Draft]' : '')
+  } else if (event.type == 'CreateEvent') {
+    return title(pl.ref_type) + ' ' + pl.ref + ' Created'
+  } else if (event.type == 'DeleteEvent') {
+    return title(pl.ref_type) + ' ' + pl.ref + ' Deleted'
+  } else if (event.type == 'MemberEvent') {
+    return pl.member.login + ' ' + title(pl.action) + ' As a Member'
   } else {
+    // MemberEvent, OrgBlockEvent,
+    // ProjectCardEvent, ProjectColumnEvent, ProjectEvent, WatchEvent,
+    // DownloadEvent**, ForkApplyEvent**, GistEvent**,
+    // MembershipEvent*, MilestoneEvent*, LabelEvent*,
+    // OrganizationEvent*, DeploymentEvent*, DeploymentStatusEvent*,
+    // PageBuildEvent*, RepositoryEvent*, StatusEvent*,
+    // TeamEvent*, TeamAddEvent*
+    // * not in timelines
+    // ** no longer created
     return event.type.replace(/([a-z])([A-Z])/g, '$1 $2')
   }
 }
@@ -174,7 +189,7 @@ var Router = Backbone.Router.extend({
       var remote = new Backbone.Collection
 
       // See https://developer.github.com/v3/activity/events/#list-events-that-a-user-has-received
-      remote.url = 'https://api.github.com/users/' + name + '/received_events' + getTokenParam()
+      remote.url = 'https://api.github.com/users/' + name + '/received_events?per_page=100' + getTokenParam()
 
       // Create an empty collection that will be used in views
       var local = new Backbone.Collection
@@ -195,6 +210,7 @@ var Router = Backbone.Router.extend({
       // First fetch
       remote.fetch({
         success: function () {
+          remote.url = 'https://api.github.com/users/' + name + '/received_events?per_page=10' + getTokenParam()
           App.initialLoad = true
           remote.forEach(function (model) {
             local.push(model)
@@ -254,7 +270,7 @@ var Router = Backbone.Router.extend({
 
 function getTokenParam() {
   if (localStorage.getItem('accessToken')) {
-    return '?access_token=' + localStorage.getItem('accessToken')
+    return '&access_token=' + localStorage.getItem('accessToken')
   }
   return ''
 }
