@@ -158,9 +158,10 @@ var NotificationView = Backbone.View.extend({
     var notification = new Notification(title, { body: body, icon: icon })
     var url = eventURL(attr)
     notification.onclick = function(event) {
-      event.preventDefault();
-      window.open(eventURL(attr), '_blank');
-    }
+      event.preventDefault()
+      App.onClicked()
+      window.open(eventURL(attr), '_blank')
+    }.bind(this)
     setTimeout(notification.close.bind(notification), 5000)
   },
 
@@ -231,20 +232,28 @@ var Router = Backbone.Router.extend({
 
       // On add, update bubble
       var counter = 0
-
+      App.onClicked = function () {
+        --counter
+        App.updateCounter()
+      }
       ifvisible.on('focus', function () {
         counter = 0
-        Tinycon.setBubble(counter)
+        App.updateCounter()
       })
 
       remote.on('add', function () {
         if (ifvisible.now()) {
           counter = 0
+          App.updateCounter()
         } else {
           ++counter
+          App.updateCounter()
         }
         Tinycon.setBubble(counter)
       })
+      App.updateCounter = function () {
+        Tinycon.setBubble(counter)
+      }
     }.bind(this))
   },
 
