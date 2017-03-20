@@ -59,6 +59,9 @@ var eventURL = function(event) {
   } else if (event.type == 'FollowEvent') { // **
     return url('target')
   } else if (event.type == 'GollumEvent') { // wiki update
+    if (!/^https:\/\/github.com/.exec(event.payload.pages[0].html_url)) {
+      event.payload.pages[0].html_url = event.payload.pages[0].html_url.replace(/^\/?/, 'https://github.com/')
+    }
     return event.payload.pages[0].html_url + '/_compare/' + event.payload.pages[0].sha
   } else if (event.type == 'PublicEvent') {
     return 'https://github.com/'+event.payload.repository.full_name
