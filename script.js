@@ -119,7 +119,7 @@ var eventTitle = function (event) {
   } else if (event.type == 'PullRequestReviewEvent') {
     return 'Pull Request #' + pl.pull_request.number + ' Reviewed: ' + title(pl.review.state)
   } else if (event.type == 'PullRequestReviewCommentEvent') {
-    return 'Pull Request #' + pl.pull_request.number + ' Comment  ' + title(pl.action)
+    return 'Pull Request #' + pl.pull_request.number + ' Comment ' + title(pl.action)
   } else if (event.type == 'PullRequestReviewCommentEvent') {
     return 'Release ' + (pl.release.name || pl.release.tag_name) + ' ' + title(pl.action) + (pl.release.draft ? ' [Draft]' : '')
   } else if (event.type == 'CreateEvent') {
