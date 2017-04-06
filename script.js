@@ -123,7 +123,7 @@ var eventTitle = function (event) {
   } else if (event.type == 'PullRequestReviewCommentEvent') {
     return 'Release ' + (pl.release.name || pl.release.tag_name) + ' ' + title(pl.action) + (pl.release.draft ? ' [Draft]' : '')
   } else if (event.type == 'CreateEvent') {
-    return title(pl.ref_type) + ' ' + pl.ref + ' Created'
+    return title(pl.ref_type) + ' ' + (pl.ref || event.repo.name) + ' Created'
   } else if (event.type == 'DeleteEvent') {
     return title(pl.ref_type) + ' ' + pl.ref + ' Deleted'
   } else if (event.type == 'MemberEvent') {
