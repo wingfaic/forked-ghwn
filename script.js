@@ -49,6 +49,9 @@ var eventURL = function(event) {
   if (event.type == 'PullRequestEvent') {
     return url('pull_request')
   } else if (event.type == 'PushEvent') {
+    if (event.payload.size === 1) {
+      return 'https://github.com/'+event.repo.name+'/commits/'+event.payload.head
+    }
     return 'https://github.com/'+event.repo.name+'/compare/'+event.payload.before+'...'+event.payload.head
   } else if (event.type == 'IssuesEvent') {
     return url('issue')
