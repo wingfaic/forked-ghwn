@@ -43,16 +43,17 @@ var ListView = Backbone.View.extend({
 })
 
 var eventURL = function(event) {
+  var pl = event.payload
   function url(key) {
-    return event.payload[key].html_url
+    return pl[key].html_url
   }
   if (event.type == 'PullRequestEvent') {
     return url('pull_request')
   } else if (event.type == 'PushEvent') {
-    if (event.payload.size === 1) {
-      return 'https://github.com/'+event.repo.name+'/commits/'+event.payload.head
+    if (pl.size === 1) {
+      return 'https://github.com/'+event.repo.name+'/commit/'+pl.head
     }
-    return 'https://github.com/'+event.repo.name+'/compare/'+event.payload.before+'...'+event.payload.head
+    return 'https://github.com/'+event.repo.name+'/compare/'+pl.before+'...'+pl.head
   } else if (event.type == 'IssuesEvent') {
     return url('issue')
   } else if (event.type == 'IssueCommentEvent' || event.type == 'CommitCommentEvent') {
@@ -62,12 +63,12 @@ var eventURL = function(event) {
   } else if (event.type == 'FollowEvent') { // **
     return url('target')
   } else if (event.type == 'GollumEvent') { // wiki update
-    if (!/^https:\/\/github.com/.exec(event.payload.pages[0].html_url)) {
-      event.payload.pages[0].html_url = event.payload.pages[0].html_url.replace(/^\/?/, 'https://github.com/')
+    if (!/^https:\/\/github.com/.exec(pl.pages[0].html_url)) {
+      pl.pages[0].html_url = pl.pages[0].html_url.replace(/^\/?/, 'https://github.com/')
     }
-    return event.payload.pages[0].html_url + '/_compare/' + event.payload.pages[0].sha
+    return pl.pages[0].html_url + '/_compare/' + pl.pages[0].sha
   } else if (event.type == 'PublicEvent') {
-    return 'https://github.com/'+event.payload.repository.full_name
+    return 'https://github.com/'+pl.repository.full_name
   } else if (event.type == 'PullRequestReviewEvent') {
     return url('review')
   } else if (event.type == 'PullRequestReviewCommentEvent') {
@@ -99,14 +100,14 @@ function title(s) {
   return s.replace(/_/g, ' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 var eventTitle = function (event) {
-  var pl = event.payload
+  var pl = pl
   if (event.type == 'PullRequestEvent' || event.type == 'IssuesEvent') {
     if (pl.action == 'closed' && pl.pull_request && pl.pull_request.merged) {
       pl.action = 'merged'
     }
     return (pl.pull_request ? 'Pull Request' : 'Issue') + ' #' + (pl.number || pl.issue.number) + ' ' + title(pl.action)
   } else if (event.type == 'PushEvent') {
-    return event.payload.size + ' Commit' + plur(event.payload.size) + ' Pushed to ' + event.payload.ref.replace(/^refs\/[^\/]+\//, '')
+    return pl.size + ' Commit' + plur(pl.size) + ' Pushed to ' + pl.ref.replace(/^refs\/[^\/]+\//, '')
   } else if (event.type == 'IssueCommentEvent') {
     return 'Comment ' + title(pl.action) + ' on ' + (pl.issue.pull_request ? 'Pull Request' : 'Issue') + ' #' + pl.issue.number
   } else if (event.type == 'CommitCommentEvent') {
