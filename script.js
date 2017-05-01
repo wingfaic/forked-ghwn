@@ -100,7 +100,7 @@ function title(s) {
   return s.replace(/_/g, ' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 var eventTitle = function (event) {
-  var pl = pl
+  var pl = event.payload
   if (event.type == 'PullRequestEvent' || event.type == 'IssuesEvent') {
     if (pl.action == 'closed' && pl.pull_request && pl.pull_request.merged) {
       pl.action = 'merged'
