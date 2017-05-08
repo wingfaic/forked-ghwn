@@ -132,6 +132,8 @@ var eventTitle = function (event) {
     return title(pl.ref_type) + ' ' + pl.ref + ' Deleted'
   } else if (event.type == 'MemberEvent') {
     return pl.member.login + ' ' + title(pl.action) + ' As a Member'
+  } else if (event.type == 'WatchEvent') {
+    return event.actor.login + ' ' + title(pl.action) + ' Watching'
   } else {
     // MemberEvent, OrgBlockEvent,
     // ProjectCardEvent, ProjectColumnEvent, ProjectEvent, WatchEvent,
