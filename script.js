@@ -132,11 +132,11 @@ var eventTitle = function (event) {
     return title(pl.ref_type) + ' ' + pl.ref + ' Deleted'
   } else if (event.type == 'MemberEvent') {
     return pl.member.login + ' ' + title(pl.action) + ' As a Member'
-  } else if (event.type == 'WatchEvent') {
-    return event.actor.login + ' ' + title(pl.action) + ' Watching'
+  } else if (event.type == 'WatchEvent') { // Actually when someone stars a repo
+    return event.actor.login + ' Added a Star'
   } else {
     // MemberEvent, OrgBlockEvent,
-    // ProjectCardEvent, ProjectColumnEvent, ProjectEvent, WatchEvent,
+    // ProjectCardEvent, ProjectColumnEvent, ProjectEvent,
     // DownloadEvent**, ForkApplyEvent**, GistEvent**,
     // MembershipEvent*, MilestoneEvent*, LabelEvent*,
     // OrganizationEvent*, DeploymentEvent*, DeploymentStatusEvent*,
